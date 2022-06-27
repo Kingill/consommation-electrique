@@ -15,3 +15,4 @@
 ![This is an image](https://myoctocat.com/assets/images/base-octocat.svg)
 
 
+![Image JPEG](https://user-images.githubusercontent.com/98417110/175972460-550ed643-8418-4c43-b671-aa2f7bc890b7.jpeg)
