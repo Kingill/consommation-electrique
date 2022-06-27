@@ -2,6 +2,7 @@
 
 ce projet est mutualisé avec Teslamate qui utlise un broker MQTT, Grafana https://docs.teslamate.org/docs/installation/docker
 ------------------------------------------------------------------------------------------
+# Composants
 * Capteur Shelly-EM https://shelly-api-docs.shelly.cloud/gen1/#shelly-em-overview
 
 * Broker MQTT (IBM MQ, Mosquitto)
