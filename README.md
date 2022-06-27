@@ -8,11 +8,5 @@
 * InfluxDB
 * Grafana
 
-![uuu](blob:https://ardeid.atlassian.net/7e8b6b3c-9b33-4561-b955-b499f77b39c3#media-blob-url=true&id=32402ec6-afc4-47f3-add5-abcec983c668&collection=contentId-462946355&contextId=462946355&mimeType=image%2Fpng&name=image-20220527-111901.png&size=322919&height=1285&width=2152&alt=)
 
-![This is an image]([blob:https://ardeid.atlassian.net/7e8b6b3c-9b33-4561-b955-b499f77b39c3#media-blob-url=true&id=32402ec6-afc4-47f3-add5-abcec983c668&collection=contentId-462946355&contextId=462946355&mimeType=image%2Fpng&name=image-20220527-111901.png)
-
-![This is an image](https://myoctocat.com/assets/images/base-octocat.svg)
-
-
-![Image JPEG](https://user-images.githubusercontent.com/98417110/175972460-550ed643-8418-4c43-b671-aa2f7bc890b7.jpeg)
+![IMG_5278](https://user-images.githubusercontent.com/98417110/175972938-9cf24b33-3163-47f4-8c56-558285a9f3d8.PNG)
