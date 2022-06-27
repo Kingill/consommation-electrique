@@ -6,6 +6,7 @@
 * Node-RED
 * Telegraf
 * InfluxDB
+* Grafana
 
 
 # Screenshots
