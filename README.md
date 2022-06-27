@@ -9,5 +9,5 @@
 * Grafana
 
 
+![IMG_5277](https://user-images.githubusercontent.com/98417110/175973803-466c8f32-6263-46f4-92b0-768c66dc93bc.PNG)
 ![IMG_5278](https://user-images.githubusercontent.com/98417110/175972938-9cf24b33-3163-47f4-8c56-558285a9f3d8.PNG)
-![IMG_5278](https://user-images.githubusercontent.com/98417110/175973437-036bab61-0f78-4091-a7af-4bc33a76bcc0.PNG)
