@@ -2,7 +2,7 @@
 
 * Capteur Shelly-EM https://shelly-api-docs.shelly.cloud/gen1/#shelly-em-overview
 
-* Boker MQTT (IBM MQ, Mosquitto)
+* Broker MQTT (IBM MQ, Mosquitto)
 * Node-RED
 * Telegraf
 * InfluxDB
