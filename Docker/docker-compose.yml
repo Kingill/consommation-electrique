@@ -1,0 +1,94 @@
+version: "3"
+
+services:
+  teslamate:
+    image: teslamate/teslamate:latest
+    restart: always
+    environment:
+      - ENCRYPTION_KEY=ea068ffc3f1b20d6bbd89f119268141bc29ccd734f4499bcfce3947c9c6300b6
+      - DATABASE_USER=teslamate
+      - DATABASE_PASS=teslamate
+      - DATABASE_NAME=teslamate
+      - DATABASE_HOST=database
+      - MQTT_HOST=mosquitto
+    ports:
+      - 4000:4000
+    volumes:
+      - ./import:/opt/app/import
+    cap_drop:
+      - all
+
+  database:
+    image: postgres:13
+    restart: always
+    environment:
+      - POSTGRES_USER=teslamate
+      - POSTGRES_PASSWORD=teslamate
+      - POSTGRES_DB=teslamate
+    volumes:
+      - teslamate-db:/var/lib/postgresql/data
+
+  grafana:
+    image: teslamate/grafana:latest
+    restart: always
+    environment:
+      - DATABASE_USER=teslamate
+      - DATABASE_PASS=teslamate
+      - DATABASE_NAME=teslamate
+      - DATABASE_HOST=database
+    ports:
+      - 3000:3000
+    volumes:
+      - teslamate-grafana-data:/var/lib/grafana
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: always
+    command: mosquitto -c /mosquitto-no-auth.conf
+    ports:
+      - 1883:1883
+    volumes:
+      - mosquitto-conf:/mosquitto/config
+      - mosquitto-data:/mosquitto/data
+
+  node_red:
+    image: nodered/node-red:latest
+    ports:
+      - 1880:1880
+    volumes:
+      - node-red-data:/data
+
+  influxdb:
+    image: influxdb:latest
+    restart: always
+    ports:
+      - 8086:8086
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    environment:
+      - INFLUXDB_DB=teslamate
+      - INFLUXDB_USER=teslamate
+      - INFLUXDB_USER_PASSWORD=teslamate
+      - INFLUXDB_ADMIN_ENABLED=true
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=password
+
+  telegraf:
+    image: telegraf:latest
+    links:
+      - influxdb
+    restart: always
+    volumes:
+      - telegraf-data:/etc/telegraf
+
+
+
+
+volumes:
+  teslamate-db:
+  teslamate-grafana-data:
+  mosquitto-conf:
+  mosquitto-data:
+  node-red-data:
+  influxdb-data:
+  telegraf-data:
