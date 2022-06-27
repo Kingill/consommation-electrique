@@ -16,5 +16,3 @@
 
 ![Mosquitto](https://user-images.githubusercontent.com/98417110/175978698-9ffafae4-b1da-4dfc-82c4-b9e0cac636fa.png)
 
-![This is an image](https://myoctocat.com/assets/images/base-octocat.svg)
-
