@@ -5,7 +5,7 @@ services:
     image: teslamate/teslamate:latest
     restart: always
     environment:
-      - ENCRYPTION_KEY=ea068ffc3f1b20d6bbd89f119268141bc29ccd734f4499bcfce3947c9c6300b6
+      - ENCRYPTION_KEY=
       - DATABASE_USER=teslamate
       - DATABASE_PASS=teslamate
       - DATABASE_NAME=teslamate
@@ -80,9 +80,6 @@ services:
     restart: always
     volumes:
       - telegraf-data:/etc/telegraf
-
-
-
 
 volumes:
   teslamate-db:
