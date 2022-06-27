@@ -6,10 +6,12 @@
 * Node-RED
 * Telegraf
 * InfluxDB
-* Grafana
+
 
 # Screenshots
-![pic1](https://user-images.githubusercontent.com/98417110/175976438-31c8240c-6efe-4e92-ab8a-2b40e26ee651.png)
 
+* Grafana
+![pic1](https://user-images.githubusercontent.com/98417110/175976438-31c8240c-6efe-4e92-ab8a-2b40e26ee651.png)
+* Node-RED
 ![pic2](https://user-images.githubusercontent.com/98417110/175976786-b6a3a262-9072-4171-aaff-e7010da7a9d3.png)
 
