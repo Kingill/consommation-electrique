@@ -4,12 +4,10 @@ firstDay =  from(bucket: "conso")
 |> filter(fn: (r) => r["_field"] == "value")
 |> filter(fn: (r) => r["host"] == "aad92904f5e0")
 |> filter(fn: (r) => r["topic"] == "shellies/shellyem-485519C9F56D/emeter/0/total")
+//conversion Wh kWh
 |> map(fn: (r) => ({r with _value: r._value * 0.001}))
 |> first()
 //|> yield(name: "firstDay") 
-
-
-
 
 lastDay = from(bucket: "conso")
 |> range(start: v.timeRangeStop)
@@ -17,24 +15,10 @@ lastDay = from(bucket: "conso")
 |> filter(fn: (r) => r["_field"] == "value")
 |> filter(fn: (r) => r["host"] == "aad92904f5e0")
 |> filter(fn: (r) => r["topic"] == "shellies/shellyem-485519C9F56D/emeter/0/total")
+//conversion Wh kWh
 |> map(fn: (r) => ({r with _value: r._value * 0.001 }))
 |> first()
 //|> yield(name: "lastDay") 
-
-
-//overview = union(tables: [firstDay, lastDay])
-//|> difference()
-//overview
-
-//firstDayValue = firstDay
-//|> findRecord(fn: (key) => key._field == "value", idx: 0)
-
-//lastDayValue = lastDay
-//|> findRecord(fn: (key) => key._field == "value", idx: 0)
-
-//lastDay
-//|> map(fn: (r) => ({r with _value: r._value * 0.001 / 60.0}))
-//|> map(fn: (r) => ({ r with difference: 100.00 - 50.00}))
 
 join_datasteams = join(
     tables: {firstDay: firstDay, lastDay: lastDay},
@@ -42,5 +26,4 @@ join_datasteams = join(
 |> map(fn: (r) => ({ r with _value: (r._value_lastDay - r._value_firstDay)}))
 |> keep(columns: ["_value", "host"])
 |> yield(name: "resultat") 
-
 //join_datasteams
