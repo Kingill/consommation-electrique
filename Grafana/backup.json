@@ -1,0 +1,477 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 25,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "X1NZpO3nz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "kwatth"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 5,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.3.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "X1NZpO3nz"
+          },
+          "query": "firstDay =  from(bucket: \"conso\")\n|> range(start: v.timeRangeStart)\n|> filter(fn: (r) => r[\"_measurement\"] == \"mesure_float\")\n|> filter(fn: (r) => r[\"_field\"] == \"value\")\n|> filter(fn: (r) => r[\"host\"] == \"aad92904f5e0\")\n|> filter(fn: (r) => r[\"topic\"] == \"shellies/shellyem-485519C9F56D/emeter/0/total\")\n|> map(fn: (r) => ({r with _value: r._value * 0.001}))\n|> first()\n//|> yield(name: \"firstDay\") \n\n\n\n\nlastDay = from(bucket: \"conso\")\n|> range(start: v.timeRangeStop)\n|> filter(fn: (r) => r[\"_measurement\"] == \"mesure_float\")\n|> filter(fn: (r) => r[\"_field\"] == \"value\")\n|> filter(fn: (r) => r[\"host\"] == \"aad92904f5e0\")\n|> filter(fn: (r) => r[\"topic\"] == \"shellies/shellyem-485519C9F56D/emeter/0/total\")\n|> map(fn: (r) => ({r with _value: r._value * 0.001 }))\n|> first()\n//|> yield(name: \"lastDay\") \n\n\n//overview = union(tables: [firstDay, lastDay])\n//|> difference()\n//overview\n\n//firstDayValue = firstDay\n//|> findRecord(fn: (key) => key._field == \"value\", idx: 0)\n\n//lastDayValue = lastDay\n//|> findRecord(fn: (key) => key._field == \"value\", idx: 0)\n\n//lastDay\n//|> map(fn: (r) => ({r with _value: r._value * 0.001 / 60.0}))\n//|> map(fn: (r) => ({ r with difference: 100.00 - 50.00}))\n\njoin_datasteams = join(\n    tables: {firstDay: firstDay, lastDay: lastDay},\n    on: [\"_field\"], method: \"inner\")\n|> map(fn: (r) => ({ r with _value: (r._value_lastDay - r._value_firstDay)}))\n|> keep(columns: [\"_value\", \"host\"])\n|> yield(name: \"resultat\") \n\n//join_datasteams\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Mesure intervalle de temps absolu (kWh)",
+      "type": "gauge"
+    },
+    {
+      "gridPos": {
+        "h": 6,
+        "w": 3,
+        "x": 5,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "content": "Au 01/07/22\nhttps://particuliers.engie.fr/content/dam/pdf/fiches-descriptives/fiche-descriptive-elec-reference.pdf\n1kWh = 0,25934 EUR",
+        "mode": "markdown"
+      },
+      "pluginVersion": "8.3.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PC98BA2F4D77E1A42"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  date AS \"time\",\n  odometer\nFROM positions\nWHERE\n  $__timeFilter(date)\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "odometer"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "positions",
+          "timeColumn": "date",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Tarifs",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "X1NZpO3nz"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 85
+              }
+            ]
+          },
+          "unit": "currencyEUR"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.3.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "X1NZpO3nz"
+          },
+          "query": "//tarif = '0.25934'\n\nfirstDay =  from(bucket: \"conso\")\n|> range(start: v.timeRangeStart)\n|> filter(fn: (r) => r[\"_measurement\"] == \"mesure_float\")\n|> filter(fn: (r) => r[\"_field\"] == \"value\")\n|> filter(fn: (r) => r[\"host\"] == \"aad92904f5e0\")\n|> filter(fn: (r) => r[\"topic\"] == \"shellies/shellyem-485519C9F56D/emeter/0/total\")\n|> map(fn: (r) => ({r with _value: r._value * 0.001}))\n|> first()\n//|> yield(name: \"firstDay\") \n\n\n\n\nlastDay = from(bucket: \"conso\")\n|> range(start: v.timeRangeStop)\n|> filter(fn: (r) => r[\"_measurement\"] == \"mesure_float\")\n|> filter(fn: (r) => r[\"_field\"] == \"value\")\n|> filter(fn: (r) => r[\"host\"] == \"aad92904f5e0\")\n|> filter(fn: (r) => r[\"topic\"] == \"shellies/shellyem-485519C9F56D/emeter/0/total\")\n|> map(fn: (r) => ({r with _value: r._value * 0.001 }))\n|> first()\n//|> yield(name: \"lastDay\") \n\n\n//overview = union(tables: [firstDay, lastDay])\n//|> difference()\n//overview\n\n//firstDayValue = firstDay\n//|> findRecord(fn: (key) => key._field == \"value\", idx: 0)\n\n//lastDayValue = lastDay\n//|> findRecord(fn: (key) => key._field == \"value\", idx: 0)\n\n//lastDay\n//|> map(fn: (r) => ({r with _value: r._value * 0.001 / 60.0}))\n//|> map(fn: (r) => ({ r with difference: 100.00 - 50.00}))\n\njoin_datasteams = join(\n    tables: {firstDay: firstDay, lastDay: lastDay},\n    on: [\"_field\"], method: \"inner\")\n|> map(fn: (r) => ({ r with _value: (r._value_lastDay - r._value_firstDay)  * 0.25934 }))\n|> keep(columns: [\"_value\", \"host\"])\n|> yield(name: \"resultat\") \n\n//join_datasteams\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Tarif intervalle de temps absolu (EUR)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "X1NZpO3nz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 3,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 6
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.4",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "X1NZpO3nz"
+          },
+          "query": "  from(bucket: \"conso\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mesure_float\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"host\"] == \"aad92904f5e0\")\n  |> filter(fn: (r) => r[\"topic\"] == \"shellies/shellyem-485519C9F56D/emeter/0/total\")\n    |> map(fn: (r) => ({r with _value: r._value * 0.001 }))\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Mesure énergie cumulative (kWh)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "X1NZpO3nz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "X1NZpO3nz"
+          },
+          "query": "from(bucket: \"conso\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mesure_float\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"host\"] == \"aad92904f5e0\")\n  |> filter(fn: (r) => r[\"topic\"] == \"shellies/shellyem-485519C9F56D/emeter/0/energy\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Puissance active instantanée (W)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "X1NZpO3nz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-RdYlGr"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "X1NZpO3nz"
+          },
+          "query": "from(bucket: \"conso\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mesure_float\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r[\"host\"] == \"aad92904f5e0\")\n  |> filter(fn: (r) => r[\"topic\"] == \"shellies/shellyem-485519C9F56D/emeter/0/voltage\")\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A"
+        }
+      ],
+      "title": "Tension (V)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 34,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now/d",
+    "to": "now-1m"
+  },
+  "timepicker": {},
+  "timezone": "Europe/Paris",
+  "title": "consommation électrique",
+  "uid": "a7Jy60q7k",
+  "version": 72,
+  "weekStart": ""
+}
