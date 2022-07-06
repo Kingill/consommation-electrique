@@ -1,6 +1,4 @@
 # Projet pour mesurer la consommation d'énergie d'une prise électrique dans le cadre d'une recharge à domicile d'un véhicule électrique
-
-Ce projet est mutualisé avec Teslamate qui utlise un broker MQTT, Grafana https://docs.teslamate.org/docs/installation/docker
 -
 # Composants
 * Capteur Shelly-EM https://shelly-api-docs.shelly.cloud/gen1/#shelly-em-overview
