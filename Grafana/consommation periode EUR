@@ -26,6 +26,6 @@ join_datasteams = join(
     tables: {firstDay: firstDay, lastDay: lastDay},
     on: ["_field"], method: "inner")
 |> map(fn: (r) => ({ r with _value: (r._value_lastDay - r._value_firstDay)  * 0.25934 }))
-|> keep(columns: ["_value", "host"])
+|> keep(columns: ["_value"])
 |> yield(name: "resultat") 
 //join_datasteams
