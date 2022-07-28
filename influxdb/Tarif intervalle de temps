@@ -1,0 +1,30 @@
+//tarif = '0.25934'
+
+firstDay =  from(bucket: "conso")
+|> range(start: v.timeRangeStart)
+|> filter(fn: (r) => r["_measurement"] == "mesure_float")
+|> filter(fn: (r) => r["_field"] == "value")
+|> filter(fn: (r) => r["host"] == "aad92904f5e0")
+|> filter(fn: (r) => r["topic"] == "shellies/shellyem-485519C9F56D/emeter/0/total")
+|> map(fn: (r) => ({r with _value: r._value * 0.001}))
+|> first()
+//|> yield(name: "firstDay") 
+
+lastDay = from(bucket: "conso")
+|> range(start: v.timeRangeStop)
+|> filter(fn: (r) => r["_measurement"] == "mesure_float")
+|> filter(fn: (r) => r["_field"] == "value")
+|> filter(fn: (r) => r["host"] == "aad92904f5e0")
+|> filter(fn: (r) => r["topic"] == "shellies/shellyem-485519C9F56D/emeter/0/total")
+|> map(fn: (r) => ({r with _value: r._value * 0.001 }))
+|> first()
+//|> yield(name: "lastDay") 
+
+join_datasteams = join(
+    tables: {firstDay: firstDay, lastDay: lastDay},
+    on: ["_field"], method: "inner")
+|> map(fn: (r) => ({ r with _value: (r._value_lastDay - r._value_firstDay)  * 0.25934 }))
+|> keep(columns: ["_value", "host"])
+|> yield(name: "resultat") 
+
+//join_datasteams
