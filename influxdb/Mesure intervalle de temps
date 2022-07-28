@@ -8,9 +8,6 @@ firstDay =  from(bucket: "conso")
 |> first()
 //|> yield(name: "firstDay") 
 
-
-
-
 lastDay = from(bucket: "conso")
 |> range(start: v.timeRangeStop)
 |> filter(fn: (r) => r["_measurement"] == "mesure_float")
@@ -20,21 +17,6 @@ lastDay = from(bucket: "conso")
 |> map(fn: (r) => ({r with _value: r._value * 0.001 }))
 |> first()
 //|> yield(name: "lastDay") 
-
-
-//overview = union(tables: [firstDay, lastDay])
-//|> difference()
-//overview
-
-//firstDayValue = firstDay
-//|> findRecord(fn: (key) => key._field == "value", idx: 0)
-
-//lastDayValue = lastDay
-//|> findRecord(fn: (key) => key._field == "value", idx: 0)
-
-//lastDay
-//|> map(fn: (r) => ({r with _value: r._value * 0.001 / 60.0}))
-//|> map(fn: (r) => ({ r with difference: 100.00 - 50.00}))
 
 join_datasteams = join(
     tables: {firstDay: firstDay, lastDay: lastDay},
